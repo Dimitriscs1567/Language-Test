@@ -1,0 +1,12 @@
+class: Test
+table: test
+fields: 
+  languageId: int, parent=language
+  authUserId: int, parent=auth_user
+  result: int?
+  length: int
+  finished: bool 
+  timeStarted: DateTime
+  timeFinished: DateTime? 
+  timeLimit: int?
+  words: List<TestWord>?, api

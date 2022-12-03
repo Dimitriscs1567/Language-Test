@@ -1,0 +1,6 @@
+class: Language
+table: language
+fields:
+  name: String
+  code: String
+  

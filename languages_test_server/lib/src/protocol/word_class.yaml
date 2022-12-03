@@ -1,0 +1,7 @@
+class: Word
+table: word
+fields:
+  languageId: int, parent=language
+  word: String
+  translations: List<String>
+  

@@ -1,0 +1,9 @@
+class: TestWord
+table: test_word
+fields: 
+  testId: int, parent=test
+  wordId: int, parent=word
+  choices: List<String>
+  answer: String?
+  correct: bool?
+  

@@ -15,16 +15,20 @@ class LanguageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onTap: () => onClick(language.code),
-        title: Text(language.name),
-        subtitle: Text(language.code),
-        trailing: IconButton(
-          onPressed: () => onDelete(language.id),
-          icon: const Icon(
-            Icons.delete,
-            color: Colors.red,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: Card(
+        elevation: 3,
+        child: ListTile(
+          onTap: () => onClick(language.code),
+          title: Text(language.name),
+          subtitle: Text(language.code),
+          trailing: IconButton(
+            onPressed: () => onDelete(language.id),
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.red,
+            ),
           ),
         ),
       ),

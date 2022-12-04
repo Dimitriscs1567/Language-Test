@@ -19,7 +19,6 @@ class _AllLanguagesPageState extends State<AllLanguagesPage> {
 
   Future<void> _onDelete(int id) async {
     final result = await GetClient.getClient().language.delete(id);
-    print(result);
     if (result != null) {
       setState(() {
         _getAllLanguages();
@@ -52,16 +51,19 @@ class _AllLanguagesPageState extends State<AllLanguagesPage> {
             );
           }
 
-          return ListView(
-            children: (snapshot.data as List<Language>)
-                .map(
-                  (lan) => LanguageWidget(
-                    language: lan,
-                    onDelete: _onDelete,
-                    onClick: _onClick,
-                  ),
-                )
-                .toList(),
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: (snapshot.data as List<Language>)
+                  .map(
+                    (lan) => LanguageWidget(
+                      language: lan,
+                      onDelete: _onDelete,
+                      onClick: _onClick,
+                    ),
+                  )
+                  .toList(),
+            ),
           );
         },
       ),

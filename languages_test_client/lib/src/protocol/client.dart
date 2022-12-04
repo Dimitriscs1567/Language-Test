@@ -9,8 +9,9 @@
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:languages_test_client/src/protocol/language_class.dart' as _i3;
-import 'dart:io' as _i4;
-import 'protocol.dart' as _i5;
+import 'package:languages_test_client/src/protocol/word_class.dart' as _i4;
+import 'dart:io' as _i5;
+import 'protocol.dart' as _i6;
 
 class _EndpointLanguage extends _i1.EndpointRef {
   _EndpointLanguage(_i1.EndpointCaller caller) : super(caller);
@@ -46,24 +47,64 @@ class _EndpointLanguage extends _i1.EndpointRef {
       );
 }
 
+class _EndpointWord extends _i1.EndpointRef {
+  _EndpointWord(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'word';
+
+  _i2.Future<List<_i4.Word>> getAll(String languageCode) =>
+      caller.callServerEndpoint<List<_i4.Word>>(
+        'word',
+        'getAll',
+        {'languageCode': languageCode},
+      );
+
+  _i2.Future<_i4.Word?> create(_i4.Word word) =>
+      caller.callServerEndpoint<_i4.Word?>(
+        'word',
+        'create',
+        {'word': word},
+      );
+
+  _i2.Future<_i4.Word?> update(_i4.Word word) =>
+      caller.callServerEndpoint<_i4.Word?>(
+        'word',
+        'update',
+        {'word': word},
+      );
+
+  _i2.Future<int?> delete(int wordId) => caller.callServerEndpoint<int?>(
+        'word',
+        'delete',
+        {'wordId': wordId},
+      );
+}
+
 class Client extends _i1.ServerpodClient {
   Client(
     String host, {
-    _i4.SecurityContext? context,
+    _i5.SecurityContext? context,
     _i1.AuthenticationKeyManager? authenticationKeyManager,
   }) : super(
           host,
-          _i5.Protocol(),
+          _i6.Protocol(),
           context: context,
           authenticationKeyManager: authenticationKeyManager,
         ) {
     language = _EndpointLanguage(this);
+    word = _EndpointWord(this);
   }
 
   late final _EndpointLanguage language;
 
+  late final _EndpointWord word;
+
   @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'language': language};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'language': language,
+        'word': word,
+      };
   @override
   Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};
 }

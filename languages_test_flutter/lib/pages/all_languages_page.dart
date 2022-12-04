@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
 import 'package:languages_test_flutter/services/get_client.dart';
+import 'package:languages_test_flutter/widgets/deleteDialog.dart';
 import 'package:languages_test_flutter/widgets/language_form.dart';
 import 'package:languages_test_flutter/widgets/language_widget.dart';
 
@@ -17,13 +18,18 @@ class _AllLanguagesPageState extends State<AllLanguagesPage> {
     return await GetClient.getClient().language.getAll();
   }
 
-  Future<void> _onDelete(int id) async {
-    final result = await GetClient.getClient().language.delete(id);
-    if (result != null) {
-      setState(() {
-        _getAllLanguages();
-      });
-    }
+  void _onDelete(int id) {
+    showDialog(context: context, builder: ((context) => const DeleteDialog()))
+        .then((value) async {
+      if (value) {
+        final result = await GetClient.getClient().language.delete(id);
+        if (result != null) {
+          setState(() {
+            _getAllLanguages();
+          });
+        }
+      }
+    });
   }
 
   void _onClick(String code) {

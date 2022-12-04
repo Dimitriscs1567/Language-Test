@@ -15,6 +15,7 @@ import 'user_class.dart' as _i5;
 import 'word_class.dart' as _i6;
 import 'protocol.dart' as _i7;
 import 'package:languages_test_client/src/protocol/language_class.dart' as _i8;
+import 'package:languages_test_client/src/protocol/word_class.dart' as _i9;
 export 'language_class.dart';
 export 'test_class.dart';
 export 'test_word_class.dart';
@@ -81,6 +82,10 @@ class Protocol extends _i1.SerializationManager {
     }
     if (t == List<_i8.Language>) {
       return (data as List).map((e) => deserialize<_i8.Language>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i9.Word>) {
+      return (data as List).map((e) => deserialize<_i9.Word>(e)).toList()
           as dynamic;
     }
     return super.deserialize<T>(data, t);

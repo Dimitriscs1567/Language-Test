@@ -11,74 +11,96 @@ class LanguagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => context.go('/'),
-        ),
-        title: const Text('Language'),
-      ),
       body: FutureBuilder(
         future: GetClient.getClient().language.getByCode(languageCode),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Container(
+              color: Colors.white,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
+              ),
             );
           }
 
           if (snapshot.hasError || snapshot.data == null) {
-            return const Center(
-              child: Text('Error'),
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => context.go('/'),
+                ),
+                title: const Text('Error'),
+              ),
+              body: const Center(
+                child: Text('Error'),
+              ),
             );
           }
 
-          return SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      const Size(200, 40),
+          final language = snapshot.data as Language;
+
+          return Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => context.go('/'),
+              ),
+              title: Text(language.name),
+            ),
+            body: SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(200, 40),
+                      ),
                     ),
+                    child: const Text('New Test'),
                   ),
-                  child: const Text('New Test'),
-                ),
-                const Padding(padding: EdgeInsets.all(10.0)),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      const Size(200, 40),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(200, 40),
+                      ),
                     ),
+                    child: const Text('Test History'),
                   ),
-                  child: const Text('Test History'),
-                ),
-                const Padding(padding: EdgeInsets.all(10.0)),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      const Size(200, 40),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.go('/$languageCode/words');
+                    },
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(200, 40),
+                      ),
                     ),
+                    child: const Text('All words'),
                   ),
-                  child: const Text('All words'),
-                ),
-                const Padding(padding: EdgeInsets.all(10.0)),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      const Size(200, 40),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.go('/$languageCode/add_words');
+                    },
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(
+                        const Size(200, 40),
+                      ),
                     ),
+                    child: const Text('Add words'),
                   ),
-                  child: const Text('Add words'),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

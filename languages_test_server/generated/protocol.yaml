@@ -3,3 +3,8 @@ language:
   - getByCode:
   - create:
   - delete:
+word:
+  - getAll:
+  - create:
+  - update:
+  - delete:

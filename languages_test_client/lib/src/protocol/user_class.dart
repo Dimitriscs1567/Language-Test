@@ -12,6 +12,7 @@ class AuthUser extends _i1.SerializableEntity {
   AuthUser({
     this.id,
     required this.username,
+    required this.isAdmin,
   });
 
   factory AuthUser.fromJson(
@@ -22,6 +23,8 @@ class AuthUser extends _i1.SerializableEntity {
       id: serializationManager.deserialize<int?>(jsonSerialization['id']),
       username: serializationManager
           .deserialize<String>(jsonSerialization['username']),
+      isAdmin:
+          serializationManager.deserialize<bool>(jsonSerialization['isAdmin']),
     );
   }
 
@@ -29,11 +32,14 @@ class AuthUser extends _i1.SerializableEntity {
 
   String username;
 
+  bool isAdmin;
+
   @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'username': username,
+      'isAdmin': isAdmin,
     };
   }
 }

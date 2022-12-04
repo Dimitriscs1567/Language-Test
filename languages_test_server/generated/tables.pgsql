@@ -5,7 +5,8 @@
 CREATE TABLE "auth_user" (
   "id" serial,
   "username" text NOT NULL,
-  "password" text
+  "password" text,
+  "isAdmin" boolean NOT NULL
 );
 
 ALTER TABLE ONLY "auth_user"

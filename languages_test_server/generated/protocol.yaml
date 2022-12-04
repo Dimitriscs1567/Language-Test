@@ -1,2 +1,5 @@
 language:
-  - getAllLanguages:
+  - getAll:
+  - getByCode:
+  - create:
+  - delete:

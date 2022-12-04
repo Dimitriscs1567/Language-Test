@@ -3,3 +3,4 @@ table: auth_user
 fields:
   username: String
   password: String?, database
+  isAdmin: bool

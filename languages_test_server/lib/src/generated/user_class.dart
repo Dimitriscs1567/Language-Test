@@ -13,6 +13,7 @@ class AuthUser extends _i1.TableRow {
     int? id,
     required this.username,
     this.password,
+    required this.isAdmin,
   }) : super(id);
 
   factory AuthUser.fromJson(
@@ -25,6 +26,8 @@ class AuthUser extends _i1.TableRow {
           .deserialize<String>(jsonSerialization['username']),
       password: serializationManager
           .deserialize<String?>(jsonSerialization['password']),
+      isAdmin:
+          serializationManager.deserialize<bool>(jsonSerialization['isAdmin']),
     );
   }
 
@@ -34,6 +37,8 @@ class AuthUser extends _i1.TableRow {
 
   String? password;
 
+  bool isAdmin;
+
   @override
   String get tableName => 'auth_user';
   @override
@@ -41,6 +46,7 @@ class AuthUser extends _i1.TableRow {
     return {
       'id': id,
       'username': username,
+      'isAdmin': isAdmin,
     };
   }
 
@@ -50,6 +56,7 @@ class AuthUser extends _i1.TableRow {
       'id': id,
       'username': username,
       'password': password,
+      'isAdmin': isAdmin,
     };
   }
 
@@ -59,6 +66,7 @@ class AuthUser extends _i1.TableRow {
       'id': id,
       'username': username,
       'password': password,
+      'isAdmin': isAdmin,
     };
   }
 
@@ -76,6 +84,9 @@ class AuthUser extends _i1.TableRow {
         return;
       case 'password':
         password = value;
+        return;
+      case 'isAdmin':
+        isAdmin = value;
         return;
       default:
         throw UnimplementedError();
@@ -202,11 +213,14 @@ class AuthUserTable extends _i1.Table {
 
   final password = _i1.ColumnString('password');
 
+  final isAdmin = _i1.ColumnBool('isAdmin');
+
   @override
   List<_i1.Column> get columns => [
         id,
         username,
         password,
+        isAdmin,
       ];
 }
 

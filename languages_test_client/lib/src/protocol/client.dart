@@ -18,11 +18,31 @@ class _EndpointLanguage extends _i1.EndpointRef {
   @override
   String get name => 'language';
 
-  _i2.Future<List<_i3.Language>> getAllLanguages() =>
+  _i2.Future<List<_i3.Language>> getAll() =>
       caller.callServerEndpoint<List<_i3.Language>>(
         'language',
-        'getAllLanguages',
+        'getAll',
         {},
+      );
+
+  _i2.Future<_i3.Language?> getByCode(String code) =>
+      caller.callServerEndpoint<_i3.Language?>(
+        'language',
+        'getByCode',
+        {'code': code},
+      );
+
+  _i2.Future<_i3.Language?> create(_i3.Language language) =>
+      caller.callServerEndpoint<_i3.Language?>(
+        'language',
+        'create',
+        {'language': language},
+      );
+
+  _i2.Future<int?> delete(int languageId) => caller.callServerEndpoint<int?>(
+        'language',
+        'delete',
+        {'languageId': languageId},
       );
 }
 

@@ -8,6 +8,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/language_endpoint.dart' as _i2;
+import 'package:languages_test_server/src/generated/language_class.dart' as _i3;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -24,16 +25,69 @@ class Endpoints extends _i1.EndpointDispatch {
       name: 'language',
       endpoint: endpoints['language']!,
       methodConnectors: {
-        'getAllLanguages': _i1.MethodConnector(
-          name: 'getAllLanguages',
+        'getAll': _i1.MethodConnector(
+          name: 'getAll',
           params: {},
           call: (
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['language'] as _i2.LanguageEndpoint)
-                  .getAllLanguages(session),
-        )
+              (endpoints['language'] as _i2.LanguageEndpoint).getAll(session),
+        ),
+        'getByCode': _i1.MethodConnector(
+          name: 'getByCode',
+          params: {
+            'code': _i1.ParameterDescription(
+              name: 'code',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['language'] as _i2.LanguageEndpoint).getByCode(
+            session,
+            params['code'],
+          ),
+        ),
+        'create': _i1.MethodConnector(
+          name: 'create',
+          params: {
+            'language': _i1.ParameterDescription(
+              name: 'language',
+              type: _i1.getType<_i3.Language>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['language'] as _i2.LanguageEndpoint).create(
+            session,
+            params['language'],
+          ),
+        ),
+        'delete': _i1.MethodConnector(
+          name: 'delete',
+          params: {
+            'languageId': _i1.ParameterDescription(
+              name: 'languageId',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['language'] as _i2.LanguageEndpoint).delete(
+            session,
+            params['languageId'],
+          ),
+        ),
       },
     );
   }

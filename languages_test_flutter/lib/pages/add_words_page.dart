@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -18,22 +19,50 @@ class AddWordsPage extends StatefulWidget {
 }
 
 class _AddWordsPageState extends State<AddWordsPage> {
-  bool loading = false;
+  bool _loading = false;
+  String _message = 'Selecting new words...';
 
   void readFromFile(int languageId) async {
+    if (kIsWeb) {
+      await showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            title: const Text('This option is not available from the web'),
+            actions: [
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              )
+            ],
+          );
+        }),
+      );
+      return;
+    }
+
     setState(() {
-      loading = true;
+      _loading = true;
+      _message = 'Selecting new words...';
     });
 
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['txt'],
+    );
 
     if (result != null) {
       final file = File(result.files.single.path!);
-      final wordsContent = await file.readAsString();
+      final fileLines = await file.readAsLines();
+
       List<Word> words = FileFunctions.getWordsFromFile(
         languageId,
-        wordsContent,
+        fileLines,
       );
+
+      setState(() {
+        _message = 'Saving ${words.length} new words...';
+      });
 
       for (Word word in words) {
         await GetClient.getClient().word.create(word);
@@ -41,7 +70,7 @@ class _AddWordsPageState extends State<AddWordsPage> {
     }
 
     setState(() {
-      loading = false;
+      _loading = false;
     });
   }
 
@@ -92,11 +121,11 @@ class _AddWordsPageState extends State<AddWordsPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: loading
+                children: _loading
                     ? [
                         const CircularProgressIndicator(),
                         const Padding(padding: EdgeInsets.all(10.0)),
-                        const Text('Saving new words...'),
+                        Text(_message),
                       ]
                     : [
                         ElevatedButton(

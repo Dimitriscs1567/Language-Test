@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:languages_test_client/languages_test_client.dart';
-import 'package:languages_test_flutter/services/get_client.dart';
 
-class LanguageForm extends StatefulWidget {
-  const LanguageForm({super.key});
+import '../services/get_client.dart';
+
+class WordForm extends StatefulWidget {
+  const WordForm({super.key, required this.language});
+
+  final Language language;
 
   @override
-  State<LanguageForm> createState() => _LanguageFormState();
+  State<WordForm> createState() => _WordFormState();
 }
 
-class _LanguageFormState extends State<LanguageForm> {
-  final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final codeController = TextEditingController();
-  bool _exists = false;
-  bool _loading = false;
-
+class _WordFormState extends State<WordForm> {
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+    final _wordController = TextEditingController();
+    final _translationController = TextEditingController();
+    bool _wrong = false;
+    bool _loading = false;
+
+    List<String> _makeTranslations(String value) {
+      return value
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+    }
+
     return Dialog(
       child: SizedBox(
         width: 400,
@@ -29,23 +40,23 @@ class _LanguageFormState extends State<LanguageForm> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Add Language',
+                Text(
+                  'Add Word for ${widget.language.name}',
                 ),
                 const Padding(padding: EdgeInsets.all(12.0)),
                 SizedBox(
                   width: double.infinity,
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Language Name',
+                    decoration: InputDecoration(
+                      labelText: 'Word in ${widget.language.name}',
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter the language name';
+                        return 'Please enter the word';
                       }
                       return null;
                     },
-                    controller: nameController,
+                    controller: _wordController,
                   ),
                 ),
                 const Padding(padding: EdgeInsets.all(5.0)),
@@ -53,24 +64,26 @@ class _LanguageFormState extends State<LanguageForm> {
                   width: double.infinity,
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'Language Code',
+                      labelText: 'Translations (divided by comma)',
                     ),
                     onChanged: (_) {
-                      if (_exists) {
+                      if (_wrong) {
                         setState(() {
-                          _exists = false;
+                          _wrong = false;
                         });
                       }
                     },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the language code';
-                      } else if (_exists) {
+                      if (value == null ||
+                          value.isEmpty ||
+                          _makeTranslations(value).isEmpty) {
+                        return 'Please enter at least one translation';
+                      } else if (_wrong) {
                         return 'This language code already exists';
                       }
                       return null;
                     },
-                    controller: codeController,
+                    controller: _translationController,
                   ),
                 ),
                 const Padding(padding: EdgeInsets.all(12.0)),
@@ -80,23 +93,20 @@ class _LanguageFormState extends State<LanguageForm> {
                       setState(() {
                         _loading = true;
                       });
-                      Language? newLanguage =
-                          await GetClient.getClient().language.create(
-                                Language(
-                                  name: nameController.text.trim(),
-                                  code: codeController.text.trim(),
-                                ),
-                              );
-
-                      if (newLanguage != null) {
-                        Navigator.pop(
-                          context,
-                          newLanguage,
-                        );
+                      Word? newWord = await GetClient.getClient().word.create(
+                            Word(
+                              languageId: widget.language.id!,
+                              word: _wordController.text.trim(),
+                              translations: _makeTranslations(
+                                  _translationController.text),
+                            ),
+                          );
+                      if (newWord != null) {
+                        Navigator.pop(context);
                       } else {
                         setState(() {
                           _loading = false;
-                          _exists = true;
+                          _wrong = true;
                           _formKey.currentState!.validate();
                         });
                       }

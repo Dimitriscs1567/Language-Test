@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
 import 'package:languages_test_flutter/services/file_functions.dart';
+import 'package:languages_test_flutter/widgets/word_form.dart';
 
 import '../services/get_client.dart';
 
@@ -22,7 +23,7 @@ class _AddWordsPageState extends State<AddWordsPage> {
   bool _loading = false;
   String _message = 'Selecting new words...';
 
-  void readFromFile(int languageId) async {
+  void _readFromFile(int languageId) async {
     if (kIsWeb) {
       await showDialog(
         context: context,
@@ -72,6 +73,15 @@ class _AddWordsPageState extends State<AddWordsPage> {
     setState(() {
       _loading = false;
     });
+  }
+
+  void _createWord(Language language) {
+    showDialog(
+      context: context,
+      builder: (context) => WordForm(
+        language: language,
+      ),
+    );
   }
 
   @override
@@ -130,7 +140,7 @@ class _AddWordsPageState extends State<AddWordsPage> {
                     : [
                         ElevatedButton(
                           onPressed: () {
-                            readFromFile(language.id!);
+                            _readFromFile(language.id!);
                           },
                           style: ButtonStyle(
                             fixedSize: MaterialStateProperty.all(
@@ -141,7 +151,9 @@ class _AddWordsPageState extends State<AddWordsPage> {
                         ),
                         const Padding(padding: EdgeInsets.all(10.0)),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _createWord(language);
+                          },
                           style: ButtonStyle(
                             fixedSize: MaterialStateProperty.all(
                               const Size(200, 40),

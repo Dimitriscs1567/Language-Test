@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
+import 'package:languages_test_flutter/widgets/word_form.dart';
 import 'package:languages_test_flutter/widgets/word_widget.dart';
 
 import '../services/get_client.dart';
@@ -16,8 +18,17 @@ class AllWordsPage extends StatefulWidget {
 }
 
 class _AllWordsPageState extends State<AllWordsPage> {
-  Future<List<Word>> _getAllWords() async {
-    return await GetClient.getClient().word.getAll(widget.languageCode);
+  List<Word>? _allWords;
+  List<Word> _filteredWords = [];
+  final searchController = TextEditingController();
+
+  void _getAllWords() async {
+    List<Word> res =
+        await GetClient.getClient().word.getAll(widget.languageCode);
+    _allWords = res;
+    setState(() {
+      _filteredWords = _filterWords();
+    });
   }
 
   void _onDelete(int wordId) {
@@ -34,7 +45,34 @@ class _AllWordsPageState extends State<AllWordsPage> {
     });
   }
 
-  Future<void> _onEdit(Word word) async {}
+  Future<void> _onEdit(Word word) async {
+    Word? res = await showDialog(
+      context: context,
+      builder: ((context) => WordForm(
+            word: word,
+          )),
+    );
+
+    if (res != null) {
+      setState(() {
+        _getAllWords();
+      });
+    }
+  }
+
+  List<Word> _filterWords() {
+    return _allWords!
+        .where((word) =>
+            word.word.contains(searchController.text) ||
+            word.translations.join(',').contains(searchController.text))
+        .toList();
+  }
+
+  @override
+  void initState() {
+    _getAllWords();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,37 +84,46 @@ class _AllWordsPageState extends State<AllWordsPage> {
         ),
         title: const Text('Words'),
       ),
-      body: FutureBuilder(
-        future: _getAllWords(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('Error'),
-            );
-          }
-
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              children: (snapshot.data as List<Word>)
-                  .map(
-                    (word) => WordWidget(
-                      word: word,
-                      onDelete: _onDelete,
-                      onEdit: _onEdit,
+      body: _allWords != null
+          ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(
+                      bottom: 30.0,
+                      left: 6.0,
+                      right: 5.0,
                     ),
-                  )
-                  .toList(),
+                    width: double.infinity,
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        label: Text('Search'),
+                      ),
+                      onChanged: (_) {
+                        setState(() {
+                          _filteredWords = _filterWords();
+                        });
+                      },
+                      controller: searchController,
+                    ),
+                  ),
+                  ..._filteredWords
+                      .map(
+                        (word) => WordWidget(
+                          word: word,
+                          onDelete: _onDelete,
+                          onEdit: _onEdit,
+                        ),
+                      )
+                      .toList()
+                ],
+              ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
             ),
-          );
-        },
-      ),
     );
   }
 }

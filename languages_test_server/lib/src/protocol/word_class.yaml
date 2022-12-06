@@ -4,4 +4,5 @@ fields:
   languageId: int, parent=language
   word: String
   translations: List<String>
+  language: Language?, api
   

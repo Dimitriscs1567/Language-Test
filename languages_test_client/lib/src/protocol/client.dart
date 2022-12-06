@@ -40,6 +40,13 @@ class _EndpointLanguage extends _i1.EndpointRef {
         {'language': language},
       );
 
+  _i2.Future<_i3.Language?> update(_i3.Language language) =>
+      caller.callServerEndpoint<_i3.Language?>(
+        'language',
+        'update',
+        {'language': language},
+      );
+
   _i2.Future<int?> delete(int languageId) => caller.callServerEndpoint<int?>(
         'language',
         'delete',

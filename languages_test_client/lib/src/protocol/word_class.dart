@@ -7,6 +7,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
+import 'protocol.dart' as _i2;
 
 class Word extends _i1.SerializableEntity {
   Word({
@@ -14,6 +15,7 @@ class Word extends _i1.SerializableEntity {
     required this.languageId,
     required this.word,
     required this.translations,
+    this.language,
   });
 
   factory Word.fromJson(
@@ -27,6 +29,8 @@ class Word extends _i1.SerializableEntity {
       word: serializationManager.deserialize<String>(jsonSerialization['word']),
       translations: serializationManager
           .deserialize<List<String>>(jsonSerialization['translations']),
+      language: serializationManager
+          .deserialize<_i2.Language?>(jsonSerialization['language']),
     );
   }
 
@@ -38,6 +42,8 @@ class Word extends _i1.SerializableEntity {
 
   List<String> translations;
 
+  _i2.Language? language;
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -45,6 +51,7 @@ class Word extends _i1.SerializableEntity {
       'languageId': languageId,
       'word': word,
       'translations': translations,
+      'language': language,
     };
   }
 }

@@ -33,6 +33,20 @@ class LanguageEndpoint extends Endpoint {
         .first;
   }
 
+  Future<Language?> update(Session session, Language language) async {
+    try {
+      await Language.update(session, language);
+    } catch (e) {
+      return null;
+    }
+
+    return (await Language.find(
+      session,
+      where: (t) => t.code.equals(language.code),
+    ))
+        .first;
+  }
+
   Future<int?> delete(Session session, int languageId) async {
     return await Language.delete(
       session,

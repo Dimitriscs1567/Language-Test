@@ -12,10 +12,16 @@ class WordEndpoint extends Endpoint {
       return [];
     }
 
-    return await Word.find(
+    List<Word> res = await Word.find(
       session,
       where: (t) => t.languageId.equals(languages.first.id),
     );
+
+    res.forEach((w) {
+      w.language = languages.first;
+    });
+
+    return res;
   }
 
   Future<Word?> create(Session session, Word word) async {
@@ -33,7 +39,9 @@ class WordEndpoint extends Endpoint {
       }
 
       await Word.update(session, existing.first);
-      return existing.first;
+      Word res = (await Word.findById(session, existing.first.id!))!;
+      res.language = await Language.findById(session, word.languageId);
+      return res;
     }
 
     try {
@@ -42,24 +50,35 @@ class WordEndpoint extends Endpoint {
       return null;
     }
 
-    return (await Word.find(session,
+    Word res = (await Word.find(session,
             where: (t) =>
                 t.word.equals(word.word) &
                 t.languageId.equals(word.languageId)))
         .first;
+    res.language = await Language.findById(session, word.languageId);
+    return res;
   }
 
   Future<Word?> update(Session session, Word word) async {
-    bool res = await Word.update(
-      session,
-      word,
-    );
+    List<Word> existing =
+        await Word.find(session, where: (t) => t.word.equals(word.word));
 
-    if (res) {
-      return await Word.findById(session, word.id!);
+    if (existing.isNotEmpty && existing.first.id != word.id) {
+      return null;
     }
 
-    return null;
+    try {
+      await Word.update(
+        session,
+        word,
+      );
+    } catch (e) {
+      return null;
+    }
+
+    Word res = (await Word.findById(session, word.id!))!;
+    res.language = await Language.findById(session, word.languageId);
+    return res;
   }
 
   Future<int?> delete(Session session, int wordId) async {

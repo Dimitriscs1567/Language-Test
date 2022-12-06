@@ -2,6 +2,7 @@ language:
   - getAll:
   - getByCode:
   - create:
+  - update:
   - delete:
 word:
   - getAll:

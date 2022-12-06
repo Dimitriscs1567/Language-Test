@@ -78,6 +78,24 @@ class Endpoints extends _i1.EndpointDispatch {
             params['language'],
           ),
         ),
+        'update': _i1.MethodConnector(
+          name: 'update',
+          params: {
+            'language': _i1.ParameterDescription(
+              name: 'language',
+              type: _i1.getType<_i4.Language>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['language'] as _i2.LanguageEndpoint).update(
+            session,
+            params['language'],
+          ),
+        ),
         'delete': _i1.MethodConnector(
           name: 'delete',
           params: {

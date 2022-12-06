@@ -7,6 +7,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'protocol.dart' as _i2;
 
 class Word extends _i1.TableRow {
   Word({
@@ -14,6 +15,7 @@ class Word extends _i1.TableRow {
     required this.languageId,
     required this.word,
     required this.translations,
+    this.language,
   }) : super(id);
 
   factory Word.fromJson(
@@ -27,6 +29,8 @@ class Word extends _i1.TableRow {
       word: serializationManager.deserialize<String>(jsonSerialization['word']),
       translations: serializationManager
           .deserialize<List<String>>(jsonSerialization['translations']),
+      language: serializationManager
+          .deserialize<_i2.Language?>(jsonSerialization['language']),
     );
   }
 
@@ -38,6 +42,8 @@ class Word extends _i1.TableRow {
 
   List<String> translations;
 
+  _i2.Language? language;
+
   @override
   String get tableName => 'word';
   @override
@@ -47,6 +53,7 @@ class Word extends _i1.TableRow {
       'languageId': languageId,
       'word': word,
       'translations': translations,
+      'language': language,
     };
   }
 
@@ -67,6 +74,7 @@ class Word extends _i1.TableRow {
       'languageId': languageId,
       'word': word,
       'translations': translations,
+      'language': language,
     };
   }
 

@@ -85,7 +85,9 @@ CREATE TABLE "test_word" (
   "id" serial,
   "testId" integer NOT NULL,
   "wordId" integer NOT NULL,
+  "askingWord" text NOT NULL,
   "choices" json NOT NULL,
+  "correctChoice" text NOT NULL,
   "answer" text,
   "correct" boolean
 );

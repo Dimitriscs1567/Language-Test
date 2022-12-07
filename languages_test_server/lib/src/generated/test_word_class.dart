@@ -7,15 +7,19 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import 'protocol.dart' as _i2;
 
 class TestWord extends _i1.TableRow {
   TestWord({
     int? id,
     required this.testId,
     required this.wordId,
+    required this.askingWord,
     required this.choices,
+    required this.correctChoice,
     this.answer,
     this.correct,
+    this.word,
   }) : super(id);
 
   factory TestWord.fromJson(
@@ -28,12 +32,18 @@ class TestWord extends _i1.TableRow {
           serializationManager.deserialize<int>(jsonSerialization['testId']),
       wordId:
           serializationManager.deserialize<int>(jsonSerialization['wordId']),
+      askingWord: serializationManager
+          .deserialize<String>(jsonSerialization['askingWord']),
       choices: serializationManager
           .deserialize<List<String>>(jsonSerialization['choices']),
+      correctChoice: serializationManager
+          .deserialize<String>(jsonSerialization['correctChoice']),
       answer: serializationManager
           .deserialize<String?>(jsonSerialization['answer']),
       correct:
           serializationManager.deserialize<bool?>(jsonSerialization['correct']),
+      word: serializationManager
+          .deserialize<_i2.Word?>(jsonSerialization['word']),
     );
   }
 
@@ -43,11 +53,17 @@ class TestWord extends _i1.TableRow {
 
   int wordId;
 
+  String askingWord;
+
   List<String> choices;
+
+  String correctChoice;
 
   String? answer;
 
   bool? correct;
+
+  _i2.Word? word;
 
   @override
   String get tableName => 'test_word';
@@ -57,9 +73,12 @@ class TestWord extends _i1.TableRow {
       'id': id,
       'testId': testId,
       'wordId': wordId,
+      'askingWord': askingWord,
       'choices': choices,
+      'correctChoice': correctChoice,
       'answer': answer,
       'correct': correct,
+      'word': word,
     };
   }
 
@@ -69,7 +88,9 @@ class TestWord extends _i1.TableRow {
       'id': id,
       'testId': testId,
       'wordId': wordId,
+      'askingWord': askingWord,
       'choices': choices,
+      'correctChoice': correctChoice,
       'answer': answer,
       'correct': correct,
     };
@@ -81,9 +102,12 @@ class TestWord extends _i1.TableRow {
       'id': id,
       'testId': testId,
       'wordId': wordId,
+      'askingWord': askingWord,
       'choices': choices,
+      'correctChoice': correctChoice,
       'answer': answer,
       'correct': correct,
+      'word': word,
     };
   }
 
@@ -102,8 +126,14 @@ class TestWord extends _i1.TableRow {
       case 'wordId':
         wordId = value;
         return;
+      case 'askingWord':
+        askingWord = value;
+        return;
       case 'choices':
         choices = value;
+        return;
+      case 'correctChoice':
+        correctChoice = value;
         return;
       case 'answer':
         answer = value;
@@ -236,7 +266,11 @@ class TestWordTable extends _i1.Table {
 
   final wordId = _i1.ColumnInt('wordId');
 
+  final askingWord = _i1.ColumnString('askingWord');
+
   final choices = _i1.ColumnSerializable('choices');
+
+  final correctChoice = _i1.ColumnString('correctChoice');
 
   final answer = _i1.ColumnString('answer');
 
@@ -247,7 +281,9 @@ class TestWordTable extends _i1.Table {
         id,
         testId,
         wordId,
+        askingWord,
         choices,
+        correctChoice,
         answer,
         correct,
       ];

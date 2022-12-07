@@ -57,7 +57,9 @@ class LanguagePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      GetClient.getClient().test.create(1, language.id!, 10);
+                    },
                     style: ButtonStyle(
                       fixedSize: MaterialStateProperty.all(
                         const Size(200, 40),

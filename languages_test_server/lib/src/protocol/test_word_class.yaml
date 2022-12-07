@@ -3,7 +3,10 @@ table: test_word
 fields: 
   testId: int, parent=test
   wordId: int, parent=word
+  askingWord: String
   choices: List<String>
+  correctChoice: String
   answer: String?
   correct: bool?
+  word: Word?, api
   

@@ -4,6 +4,8 @@ language:
   - create:
   - update:
   - delete:
+test:
+  - create:
 word:
   - getAll:
   - create:

@@ -86,87 +86,85 @@ class _AddWordsPageState extends State<AddWordsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: GetClient.getClient().language.getByCode(widget.languageCode),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Container(
-              color: Colors.white,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
+    return FutureBuilder(
+      future: GetClient.getClient().language.getByCode(widget.languageCode),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container(
+            color: Colors.white,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: Colors.blue,
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          if (snapshot.hasError || snapshot.data == null) {
-            return Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => context.go('/'),
-                ),
-                title: const Text('Error'),
-              ),
-              body: const Center(
-                child: Text('Error'),
-              ),
-            );
-          }
-
-          final language = snapshot.data as Language;
-
+        if (snapshot.hasError || snapshot.data == null) {
           return Scaffold(
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => context.go('/${widget.languageCode}'),
+                onPressed: () => context.go('/'),
               ),
-              title: Text('Add words for ${language.name}'),
+              title: const Text('Error'),
             ),
-            body: SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _loading
-                    ? [
-                        const CircularProgressIndicator(),
-                        const Padding(padding: EdgeInsets.all(10.0)),
-                        Text(_message),
-                      ]
-                    : [
-                        ElevatedButton(
-                          onPressed: () {
-                            _readFromFile(language.id!);
-                          },
-                          style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all(
-                              const Size(200, 40),
-                            ),
-                          ),
-                          child: const Text('Add words from file'),
-                        ),
-                        const Padding(padding: EdgeInsets.all(10.0)),
-                        ElevatedButton(
-                          onPressed: () {
-                            _createWord(language);
-                          },
-                          style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all(
-                              const Size(200, 40),
-                            ),
-                          ),
-                          child: const Text('Add single word'),
-                        ),
-                      ],
-              ),
+            body: const Center(
+              child: Text('Error'),
             ),
           );
-        },
-      ),
+        }
+
+        final language = snapshot.data as Language;
+
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => context.go('/${widget.languageCode}'),
+            ),
+            title: Text('Add words for ${language.name}'),
+          ),
+          body: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _loading
+                  ? [
+                      const CircularProgressIndicator(),
+                      const Padding(padding: EdgeInsets.all(10.0)),
+                      Text(_message),
+                    ]
+                  : [
+                      ElevatedButton(
+                        onPressed: () {
+                          _readFromFile(language.id!);
+                        },
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            const Size(200, 40),
+                          ),
+                        ),
+                        child: const Text('Add words from file'),
+                      ),
+                      const Padding(padding: EdgeInsets.all(10.0)),
+                      ElevatedButton(
+                        onPressed: () {
+                          _createWord(language);
+                        },
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            const Size(200, 40),
+                          ),
+                        ),
+                        child: const Text('Add single word'),
+                      ),
+                    ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

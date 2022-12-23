@@ -82,7 +82,9 @@ class _AllWordsPageState extends State<AllWordsPage> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.go('/${widget.languageCode}'),
         ),
-        title: const Text('Words'),
+        title: _allWords != null && _allWords!.isNotEmpty
+            ? Text('${_allWords!.first.language!.name} words')
+            : const Text('Words'),
       ),
       body: _allWords != null
           ? Padding(

@@ -15,8 +15,9 @@ import 'user_class.dart' as _i5;
 import 'word_class.dart' as _i6;
 import 'protocol.dart' as _i7;
 import 'package:languages_test_server/src/generated/language_class.dart' as _i8;
-import 'package:languages_test_server/src/generated/word_class.dart' as _i9;
-import 'package:serverpod/protocol.dart' as _i10;
+import 'package:languages_test_server/src/generated/test_class.dart' as _i9;
+import 'package:languages_test_server/src/generated/word_class.dart' as _i10;
+import 'package:serverpod/protocol.dart' as _i11;
 export 'language_class.dart';
 export 'test_class.dart';
 export 'test_word_class.dart';
@@ -84,12 +85,16 @@ class Protocol extends _i1.SerializationManagerServer {
       return (data as List).map((e) => deserialize<_i8.Language>(e)).toList()
           as dynamic;
     }
-    if (t == List<_i9.Word>) {
-      return (data as List).map((e) => deserialize<_i9.Word>(e)).toList()
+    if (t == List<_i9.Test>) {
+      return (data as List).map((e) => deserialize<_i9.Test>(e)).toList()
+          as dynamic;
+    }
+    if (t == List<_i10.Word>) {
+      return (data as List).map((e) => deserialize<_i10.Word>(e)).toList()
           as dynamic;
     }
     try {
-      return _i10.Protocol().deserialize<T>(data, t);
+      return _i11.Protocol().deserialize<T>(data, t);
     } catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -137,7 +142,7 @@ class Protocol extends _i1.SerializationManagerServer {
   @override
   _i1.Table? getTableForType(Type t) {
     {
-      var table = _i10.Protocol().getTableForType(t);
+      var table = _i11.Protocol().getTableForType(t);
       if (table != null) {
         return table;
       }

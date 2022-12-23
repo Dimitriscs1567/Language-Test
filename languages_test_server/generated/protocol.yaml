@@ -6,6 +6,7 @@ language:
   - delete:
 test:
   - create:
+  - getAll:
 word:
   - getAll:
   - create:

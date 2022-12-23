@@ -4,6 +4,7 @@ import 'package:languages_test_flutter/pages/add_words_page.dart';
 import 'package:languages_test_flutter/pages/all_languages_page.dart';
 import 'package:languages_test_flutter/pages/all_words_page.dart';
 import 'package:languages_test_flutter/pages/language_page.dart';
+import 'package:languages_test_flutter/pages/new_test_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +41,12 @@ class MyApp extends StatelessWidget {
               GoRoute(
                 path: 'words',
                 builder: (context, state) => AllWordsPage(
+                  languageCode: state.params['languageCode']!,
+                ),
+              ),
+              GoRoute(
+                path: 'new_test',
+                builder: (context, state) => NewTestPage(
                   languageCode: state.params['languageCode']!,
                 ),
               ),

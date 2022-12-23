@@ -65,6 +65,7 @@ class _EndpointTest extends _i1.EndpointRef {
     int authUserId,
     int languageId,
     int length,
+    int? timeLimit,
   ) =>
       caller.callServerEndpoint<_i4.Test?>(
         'test',
@@ -73,7 +74,15 @@ class _EndpointTest extends _i1.EndpointRef {
           'authUserId': authUserId,
           'languageId': languageId,
           'length': length,
+          'timeLimit': timeLimit,
         },
+      );
+
+  _i2.Future<List<_i4.Test>> getAll(String languageCode) =>
+      caller.callServerEndpoint<List<_i4.Test>>(
+        'test',
+        'getAll',
+        {'languageCode': languageCode},
       );
 }
 

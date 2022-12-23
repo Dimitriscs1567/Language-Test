@@ -9,6 +9,7 @@ class TestEndpoint extends Endpoint {
     int authUserId,
     int languageId,
     int length,
+    int? timeLimit,
   ) async {
     if (await Word.count(session) < length) {
       return null;
@@ -23,6 +24,7 @@ class TestEndpoint extends Endpoint {
           length: length,
           finished: false,
           timeStarted: DateTime.now(),
+          timeLimit: timeLimit,
         ),
       );
     } catch (e) {
@@ -115,6 +117,27 @@ class TestEndpoint extends Endpoint {
       where: (t) => t.testId.equals(test.id!),
     );
 
+    test.timeStarted = DateTime.now();
+    await Test.update(session, test);
+
     return test;
+  }
+
+  Future<List<Test>> getAll(Session session, String languageCode) async {
+    final languages = await Language.find(
+      session,
+      where: (t) => t.code.equals(languageCode),
+    );
+
+    if (languages.isEmpty) {
+      return [];
+    }
+
+    List<Test> res = await Test.find(
+      session,
+      where: (t) => t.languageId.equals(languages.first.id),
+    );
+
+    return res;
   }
 }

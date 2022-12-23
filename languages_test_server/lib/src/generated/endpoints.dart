@@ -145,6 +145,11 @@ class Endpoints extends _i1.EndpointDispatch {
               type: _i1.getType<int>(),
               nullable: false,
             ),
+            'timeLimit': _i1.ParameterDescription(
+              name: 'timeLimit',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
           },
           call: (
             _i1.Session session,
@@ -155,8 +160,27 @@ class Endpoints extends _i1.EndpointDispatch {
             params['authUserId'],
             params['languageId'],
             params['length'],
+            params['timeLimit'],
           ),
-        )
+        ),
+        'getAll': _i1.MethodConnector(
+          name: 'getAll',
+          params: {
+            'languageCode': _i1.ParameterDescription(
+              name: 'languageCode',
+              type: _i1.getType<String>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['test'] as _i3.TestEndpoint).getAll(
+            session,
+            params['languageCode'],
+          ),
+        ),
       },
     );
     connectors['word'] = _i1.EndpointConnector(

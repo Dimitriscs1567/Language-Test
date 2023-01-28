@@ -21,6 +21,7 @@ class Test extends _i1.TableRow {
     this.timeFinished,
     this.timeLimit,
     this.words,
+    this.language,
   }) : super(id);
 
   factory Test.fromJson(
@@ -47,6 +48,8 @@ class Test extends _i1.TableRow {
           .deserialize<int?>(jsonSerialization['timeLimit']),
       words: serializationManager
           .deserialize<List<_i2.TestWord>?>(jsonSerialization['words']),
+      language: serializationManager
+          .deserialize<_i2.Language?>(jsonSerialization['language']),
     );
   }
 
@@ -70,6 +73,8 @@ class Test extends _i1.TableRow {
 
   List<_i2.TestWord>? words;
 
+  _i2.Language? language;
+
   @override
   String get tableName => 'test';
   @override
@@ -85,6 +90,7 @@ class Test extends _i1.TableRow {
       'timeFinished': timeFinished,
       'timeLimit': timeLimit,
       'words': words,
+      'language': language,
     };
   }
 
@@ -116,6 +122,7 @@ class Test extends _i1.TableRow {
       'timeFinished': timeFinished,
       'timeLimit': timeLimit,
       'words': words,
+      'language': language,
     };
   }
 

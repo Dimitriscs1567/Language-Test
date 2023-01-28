@@ -112,11 +112,6 @@ class TestEndpoint extends Endpoint {
       );
     }
 
-    test.words = await TestWord.find(
-      session,
-      where: (t) => t.testId.equals(test.id!),
-    );
-
     test.timeStarted = DateTime.now();
     await Test.update(session, test);
 
@@ -139,5 +134,25 @@ class TestEndpoint extends Endpoint {
     );
 
     return res;
+  }
+
+  Future<Test?> findById(Session session, int id) async {
+    final test = await Test.findById(
+      session,
+      id,
+    );
+
+    if (test == null) {
+      return null;
+    }
+
+    test.words = await TestWord.find(
+      session,
+      where: (t) => t.testId.equals(test.id!),
+    );
+
+    test.language = await Language.findById(session, test.languageId);
+
+    return test;
   }
 }

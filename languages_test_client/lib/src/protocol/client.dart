@@ -84,6 +84,13 @@ class _EndpointTest extends _i1.EndpointRef {
         'getAll',
         {'languageCode': languageCode},
       );
+
+  _i2.Future<_i4.Test?> findById(int id) =>
+      caller.callServerEndpoint<_i4.Test?>(
+        'test',
+        'findById',
+        {'id': id},
+      );
 }
 
 class _EndpointWord extends _i1.EndpointRef {

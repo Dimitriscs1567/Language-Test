@@ -181,6 +181,24 @@ class Endpoints extends _i1.EndpointDispatch {
             params['languageCode'],
           ),
         ),
+        'findById': _i1.MethodConnector(
+          name: 'findById',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['test'] as _i3.TestEndpoint).findById(
+            session,
+            params['id'],
+          ),
+        ),
       },
     );
     connectors['word'] = _i1.EndpointConnector(

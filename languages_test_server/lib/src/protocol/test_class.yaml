@@ -10,3 +10,4 @@ fields:
   timeFinished: DateTime? 
   timeLimit: int?
   words: List<TestWord>?, api
+  language: Language?, api

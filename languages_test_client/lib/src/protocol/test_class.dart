@@ -21,6 +21,7 @@ class Test extends _i1.SerializableEntity {
     this.timeFinished,
     this.timeLimit,
     this.words,
+    this.language,
   });
 
   factory Test.fromJson(
@@ -47,6 +48,8 @@ class Test extends _i1.SerializableEntity {
           .deserialize<int?>(jsonSerialization['timeLimit']),
       words: serializationManager
           .deserialize<List<_i2.TestWord>?>(jsonSerialization['words']),
+      language: serializationManager
+          .deserialize<_i2.Language?>(jsonSerialization['language']),
     );
   }
 
@@ -70,6 +73,8 @@ class Test extends _i1.SerializableEntity {
 
   List<_i2.TestWord>? words;
 
+  _i2.Language? language;
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -83,6 +88,7 @@ class Test extends _i1.SerializableEntity {
       'timeFinished': timeFinished,
       'timeLimit': timeLimit,
       'words': words,
+      'language': language,
     };
   }
 }

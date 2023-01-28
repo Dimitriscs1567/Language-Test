@@ -137,7 +137,9 @@ class _NewTestPageState extends State<NewTestPage> {
                       timeLimit != null && timeLimit > 0 ? timeLimit : null,
                     );
 
-                if (newTest != null) {}
+                if (newTest != null) {
+                  context.go('/${language!.code}/test/${newTest.id}');
+                }
               },
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 7.0),

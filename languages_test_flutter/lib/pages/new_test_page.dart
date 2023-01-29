@@ -138,7 +138,7 @@ class _NewTestPageState extends State<NewTestPage> {
                     );
 
                 if (newTest != null) {
-                  context.go('/${language!.code}/test/${newTest.id}');
+                  context.go('/${language!.code}/tests/${newTest.id}');
                 }
               },
               child: const Padding(

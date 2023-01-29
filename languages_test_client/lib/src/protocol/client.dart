@@ -10,9 +10,10 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
 import 'package:languages_test_client/src/protocol/language_class.dart' as _i3;
 import 'package:languages_test_client/src/protocol/test_class.dart' as _i4;
-import 'package:languages_test_client/src/protocol/word_class.dart' as _i5;
-import 'dart:io' as _i6;
-import 'protocol.dart' as _i7;
+import 'package:languages_test_client/src/protocol/test_word_class.dart' as _i5;
+import 'package:languages_test_client/src/protocol/word_class.dart' as _i6;
+import 'dart:io' as _i7;
+import 'protocol.dart' as _i8;
 
 class _EndpointLanguage extends _i1.EndpointRef {
   _EndpointLanguage(_i1.EndpointCaller caller) : super(caller);
@@ -93,28 +94,42 @@ class _EndpointTest extends _i1.EndpointRef {
       );
 }
 
+class _EndpointTestWord extends _i1.EndpointRef {
+  _EndpointTestWord(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'testWord';
+
+  _i2.Future<_i5.TestWord?> update(_i5.TestWord testWord) =>
+      caller.callServerEndpoint<_i5.TestWord?>(
+        'testWord',
+        'update',
+        {'testWord': testWord},
+      );
+}
+
 class _EndpointWord extends _i1.EndpointRef {
   _EndpointWord(_i1.EndpointCaller caller) : super(caller);
 
   @override
   String get name => 'word';
 
-  _i2.Future<List<_i5.Word>> getAll(String languageCode) =>
-      caller.callServerEndpoint<List<_i5.Word>>(
+  _i2.Future<List<_i6.Word>> getAll(String languageCode) =>
+      caller.callServerEndpoint<List<_i6.Word>>(
         'word',
         'getAll',
         {'languageCode': languageCode},
       );
 
-  _i2.Future<_i5.Word?> create(_i5.Word word) =>
-      caller.callServerEndpoint<_i5.Word?>(
+  _i2.Future<_i6.Word?> create(_i6.Word word) =>
+      caller.callServerEndpoint<_i6.Word?>(
         'word',
         'create',
         {'word': word},
       );
 
-  _i2.Future<_i5.Word?> update(_i5.Word word) =>
-      caller.callServerEndpoint<_i5.Word?>(
+  _i2.Future<_i6.Word?> update(_i6.Word word) =>
+      caller.callServerEndpoint<_i6.Word?>(
         'word',
         'update',
         {'word': word},
@@ -130,16 +145,17 @@ class _EndpointWord extends _i1.EndpointRef {
 class Client extends _i1.ServerpodClient {
   Client(
     String host, {
-    _i6.SecurityContext? context,
+    _i7.SecurityContext? context,
     _i1.AuthenticationKeyManager? authenticationKeyManager,
   }) : super(
           host,
-          _i7.Protocol(),
+          _i8.Protocol(),
           context: context,
           authenticationKeyManager: authenticationKeyManager,
         ) {
     language = _EndpointLanguage(this);
     test = _EndpointTest(this);
+    testWord = _EndpointTestWord(this);
     word = _EndpointWord(this);
   }
 
@@ -147,12 +163,15 @@ class Client extends _i1.ServerpodClient {
 
   late final _EndpointTest test;
 
+  late final _EndpointTestWord testWord;
+
   late final _EndpointWord word;
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
         'language': language,
         'test': test,
+        'testWord': testWord,
         'word': word,
       };
   @override

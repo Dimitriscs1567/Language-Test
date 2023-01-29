@@ -8,6 +8,8 @@ test:
   - create:
   - getAll:
   - findById:
+testWord:
+  - update:
 word:
   - getAll:
   - create:

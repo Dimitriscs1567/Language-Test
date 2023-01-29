@@ -133,6 +133,10 @@ class TestEndpoint extends Endpoint {
       where: (t) => t.languageId.equals(languages.first.id),
     );
 
+    for (var test in res) {
+      test.language = await Language.findById(session, test.languageId);
+    }
+
     return res;
   }
 

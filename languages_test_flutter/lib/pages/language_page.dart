@@ -68,7 +68,9 @@ class LanguagePage extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.all(10.0)),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go('/$languageCode/tests/history');
+                  },
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(
                       const Size(200, 40),

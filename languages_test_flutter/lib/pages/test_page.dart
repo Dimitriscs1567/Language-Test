@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
+import 'package:languages_test_flutter/widgets/question_widget.dart';
+import 'package:languages_test_flutter/widgets/test_results_widget.dart';
 
 import '../services/get_client.dart';
 
@@ -16,7 +18,6 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   bool _loading = true;
   Test? _test;
-  String? _selectedValue;
 
   @override
   void initState() {
@@ -28,6 +29,17 @@ class _TestPageState extends State<TestPage> {
               _loading = false;
             }));
     super.initState();
+  }
+
+  void updateTest(TestWord updated) async {
+    if (_test != null) {
+      int index = _test!.words!.indexWhere((word) => word.id == updated.id);
+      _test!.words![index] = updated;
+      if (_getNumOfAnswered() == _test!.words!.length) {
+        _test = await GetClient.getClient().test.findById(widget.testId);
+      }
+      setState(() {});
+    }
   }
 
   @override
@@ -58,6 +70,10 @@ class _TestPageState extends State<TestPage> {
       );
     }
 
+    if (_test!.finished) {
+      return TestResultsWidget(test: _test!);
+    }
+
     TestWord testWord = getAskingWordIndex();
 
     return Scaffold(
@@ -77,69 +93,34 @@ class _TestPageState extends State<TestPage> {
               vertical: 15,
               horizontal: 10,
             ),
-            child: LinearProgressIndicator(
-              value: getTestProgress(),
-              minHeight: 15,
-            ),
-          ),
-          Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                LinearProgressIndicator(
+                  value: _getNumOfAnswered() / _test!.words!.length,
+                  minHeight: 15,
+                ),
+                const Padding(padding: EdgeInsets.all(5.0)),
                 Text(
-                  'Choose the translation of "${testWord.askingWord}":',
-                  style: const TextStyle(
-                    fontSize: 23.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.all(15)),
-                ...testWord.choices.map(
-                  (choice) => SizedBox(
-                    width: 250,
-                    child: ListTile(
-                      title: Text(
-                        choice,
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
-                      leading: Radio<String>(
-                        value: choice,
-                        groupValue: _selectedValue,
-                        onChanged: (String? value) {
-                          setState(() {
-                            _selectedValue = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.all(15)),
-                ElevatedButton(
-                  onPressed: _selectedValue != null ? () {} : null,
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      const Size(200, 40),
-                    ),
-                  ),
-                  child: const Text('Next'),
-                ),
+                  'Question ${_getNumOfAnswered() + 1} / ${_test!.words!.length}',
+                  style: const TextStyle(fontSize: 16.0),
+                )
               ],
             ),
-          )
+          ),
+          QuestionWidget(
+            testWord: testWord,
+            updateTest: updateTest,
+          ),
         ],
       ),
     );
   }
 
-  double getTestProgress() {
-    int answered = _test!.words!
+  int _getNumOfAnswered() {
+    return _test!.words!
         .map((word) => word.correct == null ? 0 : 1)
         .reduce((value, element) => value + element);
-
-    return answered / _test!.words!.length;
   }
 
   TestWord getAskingWordIndex() {

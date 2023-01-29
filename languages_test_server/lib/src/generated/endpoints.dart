@@ -9,9 +9,12 @@
 import 'package:serverpod/serverpod.dart' as _i1;
 import '../endpoints/language_endpoint.dart' as _i2;
 import '../endpoints/test_endpoint.dart' as _i3;
-import '../endpoints/word_endpoint.dart' as _i4;
-import 'package:languages_test_server/src/generated/language_class.dart' as _i5;
-import 'package:languages_test_server/src/generated/word_class.dart' as _i6;
+import '../endpoints/test_word_endpoint.dart' as _i4;
+import '../endpoints/word_endpoint.dart' as _i5;
+import 'package:languages_test_server/src/generated/language_class.dart' as _i6;
+import 'package:languages_test_server/src/generated/test_word_class.dart'
+    as _i7;
+import 'package:languages_test_server/src/generated/word_class.dart' as _i8;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -29,7 +32,13 @@ class Endpoints extends _i1.EndpointDispatch {
           'test',
           null,
         ),
-      'word': _i4.WordEndpoint()
+      'testWord': _i4.TestWordEndpoint()
+        ..initialize(
+          server,
+          'testWord',
+          null,
+        ),
+      'word': _i5.WordEndpoint()
         ..initialize(
           server,
           'word',
@@ -72,7 +81,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'language': _i1.ParameterDescription(
               name: 'language',
-              type: _i1.getType<_i5.Language>(),
+              type: _i1.getType<_i6.Language>(),
               nullable: false,
             )
           },
@@ -90,7 +99,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'language': _i1.ParameterDescription(
               name: 'language',
-              type: _i1.getType<_i5.Language>(),
+              type: _i1.getType<_i6.Language>(),
               nullable: false,
             )
           },
@@ -201,6 +210,30 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['testWord'] = _i1.EndpointConnector(
+      name: 'testWord',
+      endpoint: endpoints['testWord']!,
+      methodConnectors: {
+        'update': _i1.MethodConnector(
+          name: 'update',
+          params: {
+            'testWord': _i1.ParameterDescription(
+              name: 'testWord',
+              type: _i1.getType<_i7.TestWord>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['testWord'] as _i4.TestWordEndpoint).update(
+            session,
+            params['testWord'],
+          ),
+        )
+      },
+    );
     connectors['word'] = _i1.EndpointConnector(
       name: 'word',
       endpoint: endpoints['word']!,
@@ -218,7 +251,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['word'] as _i4.WordEndpoint).getAll(
+              (endpoints['word'] as _i5.WordEndpoint).getAll(
             session,
             params['languageCode'],
           ),
@@ -228,7 +261,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'word': _i1.ParameterDescription(
               name: 'word',
-              type: _i1.getType<_i6.Word>(),
+              type: _i1.getType<_i8.Word>(),
               nullable: false,
             )
           },
@@ -236,7 +269,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['word'] as _i4.WordEndpoint).create(
+              (endpoints['word'] as _i5.WordEndpoint).create(
             session,
             params['word'],
           ),
@@ -246,7 +279,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'word': _i1.ParameterDescription(
               name: 'word',
-              type: _i1.getType<_i6.Word>(),
+              type: _i1.getType<_i8.Word>(),
               nullable: false,
             )
           },
@@ -254,7 +287,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['word'] as _i4.WordEndpoint).update(
+              (endpoints['word'] as _i5.WordEndpoint).update(
             session,
             params['word'],
           ),
@@ -272,7 +305,7 @@ class Endpoints extends _i1.EndpointDispatch {
             _i1.Session session,
             Map<String, dynamic> params,
           ) async =>
-              (endpoints['word'] as _i4.WordEndpoint).delete(
+              (endpoints['word'] as _i5.WordEndpoint).delete(
             session,
             params['wordId'],
           ),

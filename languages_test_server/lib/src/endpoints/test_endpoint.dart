@@ -41,7 +41,7 @@ class TestEndpoint extends Endpoint {
         .first;
 
     final queryRes = await session.db.query(
-        'SELECT * FROM word WHERE "languageId"=1 ORDER BY random() LIMIT 100;');
+        'SELECT * FROM word WHERE "languageId"=$languageId ORDER BY random() LIMIT 100;');
 
     final selectedWords = queryRes
         .map(

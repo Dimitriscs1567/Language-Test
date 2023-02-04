@@ -207,6 +207,9 @@ typedef AuthUserExpressionBuilder = _i1.Expression Function(AuthUserTable);
 class AuthUserTable extends _i1.Table {
   AuthUserTable() : super(tableName: 'auth_user');
 
+  /// The database id, set if the object has been inserted into the
+  /// database or if it has been fetched from the database. Otherwise,
+  /// the id will be null.
   final id = _i1.ColumnInt('id');
 
   final username = _i1.ColumnString('username');

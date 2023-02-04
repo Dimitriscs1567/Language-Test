@@ -73,13 +73,27 @@ class TestsHistory extends StatelessWidget {
                     (test) => Card(
                       elevation: 3,
                       child: ListTile(
-                        onTap: () {},
                         title: Text(test.finished
                             ? 'Result: ${test.result}%'
                             : 'In progress'),
-                        subtitle: Text(
-                            'Started: ${getFormattedTime(test.timeStarted.toString())}'),
-                        trailing: Text(''),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Started: ${getFormattedTime(test.timeStarted.toString())}',
+                            ),
+                            if (test.finished)
+                              Text(
+                                'Duration: ${getDuration(test.timeStarted, test.timeFinished!)}',
+                              ),
+                          ],
+                        ),
+                        trailing: OutlinedButton(
+                          onPressed: () => context
+                              .go('/${test.language!.code}/tests/${test.id}'),
+                          child: Text(test.finished ? 'Results' : 'Continue'),
+                        ),
                       ),
                     ),
                   )
@@ -96,5 +110,16 @@ class TestsHistory extends StatelessWidget {
     splits[1] = splits[1].substring(0, 5);
 
     return '${splits[0]} ${splits[1]}';
+  }
+
+  String getDuration(DateTime timeStarted, DateTime timeFinished) {
+    Duration duration = timeFinished.difference(timeStarted);
+    if (duration.inMinutes == 0) {
+      return "${duration.inSeconds} seconds";
+    } else if (duration.inMinutes == 1) {
+      return "${duration.inMinutes} minute";
+    } else {
+      return "${duration.inMinutes} minutes";
+    }
   }
 }

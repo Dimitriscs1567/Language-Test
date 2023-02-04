@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
+import 'package:languages_test_flutter/widgets/history_widget.dart';
 
 import '../services/get_client.dart';
 
@@ -68,58 +69,11 @@ class TestsHistory extends StatelessWidget {
           body: SizedBox(
             width: double.infinity,
             child: ListView(
-              children: tests
-                  .map(
-                    (test) => Card(
-                      elevation: 3,
-                      child: ListTile(
-                        title: Text(test.finished
-                            ? 'Result: ${test.result}%'
-                            : 'In progress'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Started: ${getFormattedTime(test.timeStarted.toString())}',
-                            ),
-                            if (test.finished)
-                              Text(
-                                'Duration: ${getDuration(test.timeStarted, test.timeFinished!)}',
-                              ),
-                          ],
-                        ),
-                        trailing: OutlinedButton(
-                          onPressed: () => context
-                              .go('/${test.language!.code}/tests/${test.id}'),
-                          child: Text(test.finished ? 'Results' : 'Continue'),
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
+              children: tests.map((test) => HistoryWidget(test: test)).toList(),
             ),
           ),
         );
       },
     );
-  }
-
-  String getFormattedTime(String time) {
-    var splits = time.split(' ');
-    splits[1] = splits[1].substring(0, 5);
-
-    return '${splits[0]} ${splits[1]}';
-  }
-
-  String getDuration(DateTime timeStarted, DateTime timeFinished) {
-    Duration duration = timeFinished.difference(timeStarted);
-    if (duration.inMinutes == 0) {
-      return "${duration.inSeconds} seconds";
-    } else if (duration.inMinutes == 1) {
-      return "${duration.inMinutes} minute";
-    } else {
-      return "${duration.inMinutes} minutes";
-    }
   }
 }

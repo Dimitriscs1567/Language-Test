@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
@@ -18,6 +20,8 @@ class TestPage extends StatefulWidget {
 class _TestPageState extends State<TestPage> {
   bool _loading = true;
   Test? _test;
+  int? _remainingTime;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -27,11 +31,14 @@ class _TestPageState extends State<TestPage> {
         .then((value) => setState(() {
               _test = value;
               _loading = false;
+              if (_test!.timeLimit != null) {
+                _startTimer();
+              }
             }));
     super.initState();
   }
 
-  void updateTest(TestWord updated) async {
+  void _updateTest(TestWord updated) async {
     if (_test != null) {
       int index = _test!.words!.indexWhere((word) => word.id == updated.id);
       _test!.words![index] = updated;
@@ -40,6 +47,35 @@ class _TestPageState extends State<TestPage> {
       }
       setState(() {});
     }
+  }
+
+  void _startTimer() {
+    if (_remainingTime == null) {
+      _updateRemainingTime();
+      _timer = Timer.periodic(
+        const Duration(seconds: 1),
+        (timer) => _updateRemainingTime(),
+      );
+    }
+  }
+
+  void _updateRemainingTime() {
+    _remainingTime = _test!.timeLimit! -
+        DateTime.now().difference(_test!.timeStarted).inSeconds;
+    if (_remainingTime! <= 0) {
+      _timer?.cancel();
+      setState(() {
+        _remainingTime = null;
+      });
+    } else {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -104,13 +140,27 @@ class _TestPageState extends State<TestPage> {
                 Text(
                   'Question ${_getNumOfAnswered() + 1} / ${_test!.words!.length}',
                   style: const TextStyle(fontSize: 16.0),
-                )
+                ),
+                if (_test!.timeLimit != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      _remainingTime != null
+                          ? _remainingTime.toString()
+                          : '${_test!.timeLimit!} seconds have passed!',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red[400],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
           QuestionWidget(
             testWord: testWord,
-            updateTest: updateTest,
+            updateTest: _updateTest,
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
+import 'package:languages_test_flutter/widgets/result_word_widget.dart';
 
 class TestResultsWidget extends StatelessWidget {
   const TestResultsWidget({super.key, required this.test});
@@ -24,7 +25,9 @@ class TestResultsWidget extends StatelessWidget {
         children: [
           const Padding(padding: EdgeInsets.all(10.0)),
           Text(
-            "Score: ${test.result!}%",
+            _getTimerFailed()
+                ? "Failed to complete in ${test.timeLimit} seconds!"
+                : "Score: ${test.result!}%",
             style: const TextStyle(
               fontSize: 21.0,
               fontWeight: FontWeight.bold,
@@ -40,53 +43,29 @@ class TestResultsWidget extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const Padding(padding: EdgeInsets.all(10.0)),
-          ...test.words!.map((word) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Center(
-                  child: SizedBox(
-                    width: 300,
-                    child: Card(
-                      color:
-                          word.correct! ? Colors.green[200] : Colors.red[200],
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "Word: ${word.askingWord}",
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Padding(padding: EdgeInsets.all(3.0)),
-                            Text(
-                              "Correct answer: ${word.correctChoice}",
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const Padding(padding: EdgeInsets.all(3.0)),
-                            Text(
-                              "Your answer: ${word.answer}",
-                              style: const TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+          const Padding(padding: EdgeInsets.all(3.0)),
+          Text(
+            "Duration: ${_getDuration(test.timeStarted, test.timeFinished!)}",
+            style: const TextStyle(
+              fontSize: 19.0,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          if (test.timeLimit != null)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Time limit: ${test.timeLimit} seconds",
+                style: const TextStyle(
+                  fontSize: 19.0,
+                  fontWeight: FontWeight.bold,
                 ),
-              )),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          const Padding(padding: EdgeInsets.all(10.0)),
+          ...test.words!.map((word) => ResultWordWidget(testWord: word)),
         ],
       ),
     );
@@ -96,5 +75,22 @@ class TestResultsWidget extends StatelessWidget {
     return test.words!
         .map((word) => word.correct != null && word.correct! ? 1 : 0)
         .reduce((value, element) => value + element);
+  }
+
+  bool _getTimerFailed() {
+    return test.timeLimit != null &&
+        test.timeFinished!.difference(test.timeStarted).inSeconds >
+            test.timeLimit!;
+  }
+
+  String _getDuration(DateTime timeStarted, DateTime timeFinished) {
+    Duration duration = timeFinished.difference(timeStarted);
+    if (duration.inMinutes == 0) {
+      return "${duration.inSeconds} seconds";
+    } else if (duration.inMinutes == 1) {
+      return "${duration.inMinutes} minute";
+    } else {
+      return "${duration.inMinutes} minutes";
+    }
   }
 }

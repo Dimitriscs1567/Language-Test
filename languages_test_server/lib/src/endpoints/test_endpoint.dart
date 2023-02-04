@@ -131,6 +131,8 @@ class TestEndpoint extends Endpoint {
     List<Test> res = await Test.find(
       session,
       where: (t) => t.languageId.equals(languages.first.id),
+      orderBy: ColumnDateTime('timeStarted'),
+      orderDescending: true,
     );
 
     for (var test in res) {

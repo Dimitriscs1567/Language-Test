@@ -26,6 +26,9 @@ class HistoryWidget extends StatelessWidget {
               Text(
                 'Started: ${_getFormattedTime(test.timeStarted.toString())}',
               ),
+              Text(
+                'Length: ${test.length}',
+              ),
               if (test.finished)
                 Text(
                   'Duration: ${_getDuration(test.timeStarted, test.timeFinished!)}',

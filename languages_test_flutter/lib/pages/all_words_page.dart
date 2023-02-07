@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languages_test_client/languages_test_client.dart';
 import 'package:languages_test_flutter/widgets/word_form.dart';
@@ -94,7 +93,7 @@ class _AllWordsPageState extends State<AllWordsPage> {
                   Container(
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(
-                      bottom: 30.0,
+                      bottom: 10.0,
                       left: 6.0,
                       right: 5.0,
                     ),
@@ -109,6 +108,16 @@ class _AllWordsPageState extends State<AllWordsPage> {
                         });
                       },
                       controller: searchController,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 30.0,
+                      left: 6.0,
+                      right: 5.0,
+                    ),
+                    child: Text(
+                      '${_filteredWords.length} words found',
                     ),
                   ),
                   ..._filteredWords
